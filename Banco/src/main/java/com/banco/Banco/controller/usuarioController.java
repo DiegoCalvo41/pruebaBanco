@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CrossOrigin()
 @RequestMapping("/api/v1")
-public class bancoController {
+public class usuarioController {
 
 }

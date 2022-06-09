@@ -5,36 +5,40 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="banco")
-public class Banco {
-
+@Table(name="usuario")
+public class Usuario {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@Column(name="nombre")
+	@Column(name="cedula", nullable = false, length = 60)
+	private String cedula;
+	
+	@Column(name="nombre", nullable = false, length = 100)
 	private String nombre;
 	
-	@Column(name="direccion")
+	@Column (name="direccion")
 	private String direccion;
 	
-	@OneToMany
-	@Column(name="usuario_id")
-	private Usuario usuario;
+	@ManyToOne
+	@Column(name="banco_id")
+	private Banco banco;
 
-	public Banco(Integer id, String nombre, String direccion, Usuario usuario) {
+	public Usuario(Integer id, String cedula, String nombre, String direccion, Banco banco) {
 		this.id = id;
+		this.cedula = cedula;
 		this.nombre = nombre;
 		this.direccion = direccion;
-		this.usuario = usuario;
+		this.banco = banco;
 	}
 
-	public Banco() {
-
+	public Usuario() {
+	
 	}
 
 	public Integer getId() {
@@ -43,6 +47,14 @@ public class Banco {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public String getCedula() {
+		return cedula;
+	}
+
+	public void setCedula(String cedula) {
+		this.cedula = cedula;
 	}
 
 	public String getNombre() {
@@ -61,14 +73,13 @@ public class Banco {
 		this.direccion = direccion;
 	}
 
-	public Usuario getUsuario() {
-		return usuario;
+	public Banco getBanco() {
+		return banco;
 	}
 
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
+	public void setBanco(Banco banco) {
+		this.banco = banco;
 	}
-	
-	
-	
+		
+
 }
