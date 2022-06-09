@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -25,8 +26,8 @@ public class Usuario {
 	@Column (name="direccion")
 	private String direccion;
 	
-	@ManyToOne
-	@Column(name="banco_id")
+	@ManyToOne()
+	@JoinColumn(name = "FK_INVOICE", nullable = false, updatable = false)
 	private Banco banco;
 
 	public Usuario(Integer id, String cedula, String nombre, String direccion, Banco banco) {

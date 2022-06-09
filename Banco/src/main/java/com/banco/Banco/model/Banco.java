@@ -1,12 +1,17 @@
 package com.banco.Banco.model;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
 
 @Entity
 @Table(name="banco")
@@ -22,11 +27,10 @@ public class Banco {
 	@Column(name="direccion")
 	private String direccion;
 	
-	@OneToMany
-	@Column(name="usuario_id")
-	private Usuario usuario;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "banco")
+	private List<Usuario> usuario;
 
-	public Banco(Integer id, String nombre, String direccion, Usuario usuario) {
+	public Banco(Integer id, String nombre, String direccion, List<Usuario> usuario) {
 		this.id = id;
 		this.nombre = nombre;
 		this.direccion = direccion;
@@ -61,11 +65,11 @@ public class Banco {
 		this.direccion = direccion;
 	}
 
-	public Usuario getUsuario() {
+	public List<Usuario> getUsuario() {
 		return usuario;
 	}
 
-	public void setUsuario(Usuario usuario) {
+	public void setUsuario(List<Usuario> usuario) {
 		this.usuario = usuario;
 	}
 	
