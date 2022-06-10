@@ -15,17 +15,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.banco.Banco.exception.ResourceNotFoundException;
+import com.banco.Banco.model.Banco;
 import com.banco.Banco.model.Usuario;
 import com.banco.Banco.repository.usuarioRepository;
 
 
 @RestController
-@CrossOrigin()
-@RequestMapping("/api/v2")
+@CrossOrigin(origins = "http://localhost:4200/")
+@RequestMapping("/api/v1")
 public class usuarioController {
 	
 	@Autowired
 	private usuarioRepository usuarioRepo;
+
 	
 	@GetMapping("/usuario")
 	public List<Usuario> listarUsuarios(){
@@ -41,7 +43,10 @@ public class usuarioController {
 	
 	@PostMapping("/usuario/")
 	public Usuario registrarBanco(@RequestBody Usuario usuario){
+		Banco banco = new Banco();
+		banco.agregarUsuario(usuario);
 		return usuarioRepo.save(usuario);
+		
 	}
 	
 	@PutMapping("/usuario/{id}")

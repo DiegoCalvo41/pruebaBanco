@@ -24,7 +24,7 @@ import com.banco.Banco.model.Usuario;
 import com.banco.Banco.repository.bancoRepository;
 
 @RestController
-@CrossOrigin()
+@CrossOrigin(origins = "http://localhost:4200/")
 @RequestMapping("/api/v1")
 public class bancoController {
 
@@ -33,7 +33,6 @@ public class bancoController {
 	
 	@GetMapping("/banco")
 	public List<Banco> listarBancos(){
-		
 		return bancoRepo.findAll();
 	}
 	

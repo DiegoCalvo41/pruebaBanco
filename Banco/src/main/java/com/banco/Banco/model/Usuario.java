@@ -1,5 +1,6 @@
 package com.banco.Banco.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,7 +28,7 @@ public class Usuario {
 	private String direccion;
 	
 	@ManyToOne()
-	@JoinColumn(name = "FK_INVOICE", nullable = false, updatable = false)
+	@JoinColumn(name = "banco_id")
 	private Banco banco;
 
 	public Usuario(Integer id, String cedula, String nombre, String direccion, Banco banco) {

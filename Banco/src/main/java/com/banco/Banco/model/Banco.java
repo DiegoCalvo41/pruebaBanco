@@ -1,5 +1,6 @@
 package com.banco.Banco.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -27,7 +28,7 @@ public class Banco {
 	@Column(name="direccion")
 	private String direccion;
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "banco")
+	@OneToMany(mappedBy = "banco")
 	private List<Usuario> usuario;
 
 	public Banco(Integer id, String nombre, String direccion, List<Usuario> usuario) {
@@ -73,6 +74,11 @@ public class Banco {
 		this.usuario = usuario;
 	}
 	
+	public void agregarUsuario(Usuario us) {
+		if(usuario.isEmpty()) {
+			usuario.add(us);
+		}
+	}
 	
 	
 }
