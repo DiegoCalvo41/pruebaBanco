@@ -3,12 +3,16 @@ package com.banco.Banco.model;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 @Table(name="usuario")
@@ -27,8 +31,9 @@ public class Usuario {
 	@Column (name="direccion")
 	private String direccion;
 	
-	@ManyToOne()
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "banco_id")
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private Banco banco;
 
 	public Usuario(Integer id, String cedula, String nombre, String direccion, Banco banco) {

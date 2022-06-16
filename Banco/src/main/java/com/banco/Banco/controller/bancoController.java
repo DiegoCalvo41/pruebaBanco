@@ -1,5 +1,6 @@
 package com.banco.Banco.controller;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.banco.Banco.exception.ResourceNotFoundException;
 import com.banco.Banco.model.Banco;
@@ -42,31 +44,33 @@ public class bancoController {
 		return ResponseEntity.ok(banco);
 	}
 	
-	@PostMapping("/banco/")
-	public Banco registrarBanco(@RequestBody Banco banco){
-		return bancoRepo.save(banco);
+	@PostMapping("/banco")
+	public ResponseEntity<Banco> registrarBanco(@RequestBody Banco banco){
+		System.out.println("hola");
+		Banco bancoGuardado = bancoRepo.save(banco);
+		URI ubicacion = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(bancoGuardado.getId()).toUri();
+		return ResponseEntity.created(ubicacion).body(bancoGuardado);
 	}
 	
 	@PutMapping("/banco/{id}")
 	public ResponseEntity<Banco> editarBanco(@PathVariable Integer id, @RequestBody Banco banco){
-		Banco banco1 = bancoRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException(("No existe el emplado con el ID: " + id)));
-		banco1.setNombre(banco.getNombre());
-		banco1.setDireccion(banco.getDireccion());
-		
-		Banco banco2 = bancoRepo.save(banco1);
-		return ResponseEntity.ok(banco2);
+		Optional<Banco> bancoOptional = bancoRepo.findById(id);
+		if(!bancoOptional.isPresent()) {
+			return ResponseEntity.unprocessableEntity().build();
+		}
+		banco.setId(bancoOptional.get().getId());
+		bancoRepo.save(banco);
+		return ResponseEntity.noContent().build();
 	}
 	
 	@DeleteMapping("/banco/{id}")
-	public void eliminarBanco(@PathVariable Integer id) {
-		usuarioController userC = new usuarioController();
-		List<Usuario> usuario = userC.listarUsuarios();
-		for (int i = 0; i < usuario.size(); i++) {
-			if(usuario.get(i).getBanco().getId() == id) {
-				userC.eliminarBanco(usuario.get(i).getId());
-			}
-		}
-		bancoRepo.deleteById(id);
-		
+	public ResponseEntity<Object> eliminarBanco(@PathVariable Integer id) {
+		Optional<Banco> bancoOptional = bancoRepo.findById(id);
+		if(!bancoOptional.isPresent()) {
+			return ResponseEntity.unprocessableEntity().build();
+		}	
+		bancoRepo.delete(bancoOptional.get());
+		return ResponseEntity.noContent().build();
 	}
 }

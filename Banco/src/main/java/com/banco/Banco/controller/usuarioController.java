@@ -1,6 +1,8 @@
 package com.banco.Banco.controller;
 
+import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,17 +15,22 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.banco.Banco.exception.ResourceNotFoundException;
 import com.banco.Banco.model.Banco;
 import com.banco.Banco.model.Usuario;
+import com.banco.Banco.repository.bancoRepository;
 import com.banco.Banco.repository.usuarioRepository;
 
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200/")
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v2")
 public class usuarioController {
+	
+	@Autowired
+	private bancoRepository bancoRepo;
 	
 	@Autowired
 	private usuarioRepository usuarioRepo;
@@ -41,11 +48,18 @@ public class usuarioController {
 		return ResponseEntity.ok(usuario);
 	}
 	
-	@PostMapping("/usuario/")
-	public Usuario registrarBanco(@RequestBody Usuario usuario){
-		Banco banco = new Banco();
-		banco.agregarUsuario(usuario);
-		return usuarioRepo.save(usuario);
+	@PostMapping("/usuario")
+	public ResponseEntity<Usuario> registrarBanco(@RequestBody Usuario usuario){
+		System.out.println(usuario.getBanco().getNombre());
+		Optional<Banco> bancoOptional = bancoRepo.findById(usuario.getBanco().getId());
+		if(!bancoOptional.isPresent()) {
+			return ResponseEntity.unprocessableEntity().build();
+		}
+		usuario.setBanco(bancoOptional.get());
+		Usuario usuarioGuardado = usuarioRepo.save(usuario);
+		URI ubicacion = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(usuarioGuardado.getId()).toUri();
+		return ResponseEntity.created(ubicacion).body(usuarioGuardado);
 		
 	}
 	

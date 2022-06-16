@@ -28,7 +28,7 @@ public class Banco {
 	@Column(name="direccion")
 	private String direccion;
 	
-	@OneToMany(mappedBy = "banco")
+	@OneToMany(mappedBy = "banco" , cascade = CascadeType.ALL)
 	private List<Usuario> usuario;
 
 	public Banco(Integer id, String nombre, String direccion, List<Usuario> usuario) {
